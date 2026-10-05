@@ -48,7 +48,7 @@ def create_app(retriever: Retriever | None, llm: LLM, cache=None,
     """Build the API from whichever retriever, LLM, cache, agent and quota we are given.
 
     With a `library`, every user searches only their own documents (`retriever` is then unused). Without one,
-    a single shared `retriever` serves everybody, which is what the older tests and demos use."""
+    a single shared `retriever` serves everybody, which is what the older tests use."""
     app = FastAPI(title="Research Intelligence")
     jobs = job_store or InMemoryJobStore()  # Redis-backed when several servers must share jobs
 

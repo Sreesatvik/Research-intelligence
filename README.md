@@ -159,11 +159,13 @@ three dimensions for the 3D view.
 The benchmark corpus is 47 arXiv papers on seven topics (RAG, prompt injection, web agents, sentence embeddings,
 topic modelling, vision transformers, efficient transformers) with 22 hand-written queries. It lives in
 `data/corpus_arxiv` and `data/eval` and is used for evaluation only; the running app does not load it.
-All numbers below were produced by the scripts named, on a CPU.
+All numbers below were produced on a CPU by experiment scripts named `demo_*.py`. Those scripts were removed from
+the working tree to keep the project tidy; they are in the first commit of the git history
+(`git show --stat <first-commit>`) if you want to re-run any of them.
 
 ### Retrieval: dense embeddings vs TF-IDF
 
-`python demo_eval_arxiv.py` (115 passages of ~100 words, 22 queries)
+`demo_eval_arxiv.py` (115 passages of ~100 words, 22 queries)
 
 | k | Engine | Recall@k | Precision@k | MRR | ms/query |
 |---|---|---|---|---|---|
@@ -178,7 +180,7 @@ Dense retrieval is clearly better at finding the right paper; TF-IDF is about te
 
 ### Passage size
 
-`python demo_chunk_size.py` (Recall@3 / MRR, dense)
+`demo_chunk_size.py` (Recall@3 / MRR, dense)
 
 | Words per passage | Passages | Recall@3 | MRR |
 |---|---|---|---|
@@ -192,7 +194,7 @@ Dense retrieval is clearly better at finding the right paper; TF-IDF is about te
 
 ### Refusing when there is no answer
 
-`python demo_threshold.py`. Best-match scores: answerable questions 0.31 to 0.76 (median 0.60); unanswerable
+`demo_threshold.py`. Best-match scores: answerable questions 0.31 to 0.76 (median 0.60); unanswerable
 questions 0.09 to 0.42 (median 0.18).
 
 | Threshold | Answerable kept | Unanswerable refused |
@@ -208,7 +210,7 @@ legitimate questions (the lowest answerable score was 0.31).
 
 ### Cost routing
 
-`python demo_cost_router.py` (45 labelled questions; "tokens" are estimated averages)
+`demo_cost_router.py` (45 labelled questions; "tokens" are estimated averages)
 
 | Strategy | Accuracy | Under-routed | Over-routed | Avg tokens |
 |---|---|---|---|---|
@@ -224,7 +226,7 @@ question sent to plain RAG, which gives a poor answer, so it is the number to ke
 
 ### Topic classification and clustering
 
-`python demo_classify.py` (25 cross-validation folds over the 47 papers)
+`demo_classify.py` (25 cross-validation folds over the 47 papers)
 
 | Model | Accuracy | Macro-F1 |
 |---|---|---|
@@ -236,13 +238,13 @@ question sent to plain RAG, which gives a poor answer, so it is the number to ke
 The from-scratch classifier matches scikit-learn. Most errors are between neighbouring topics (prompt injection
 vs web agents).
 
-`python demo_clustering.py` and `python demo_choose_k.py`: k-means with 7 groups reaches an Adjusted Rand Index of
+`demo_clustering.py` and `demo_choose_k.py`: k-means with 7 groups reaches an Adjusted Rand Index of
 0.72 against hand-labelled topics (best of 10 starts). ARI peaks around k = 6 to 8, which matches the seven real
 topics; tightness always improves with more groups, so it cannot choose k by itself.
 
 ### Semantic cache threshold
 
-`python demo_cache_threshold.py`. Same-meaning pairs scored 0.61 to 0.97, but near-miss pairs that must **not** hit
+`demo_cache_threshold.py`. Same-meaning pairs scored 0.61 to 0.97, but near-miss pairs that must **not** hit
 (for example "FLARE on StrategyQA" vs "FLARE on ASQA") scored up to 0.94. The ranges overlap, so similarity alone is
 unsafe. The cache therefore requires a very high threshold (0.96) **and** that numbers, acronyms and names match
 between the two questions.
@@ -255,7 +257,7 @@ These need live model calls and were measured during development rather than re-
 - Trimming old tool results from the agent's history blindly raised token use by about 48%, so it is off by
   default; the loop guard stayed.
 - PDF tables and figures are answered by a vision model on a cropped region; scripts `demo_table_qa.py`,
-  `demo_vision_vs_text.py` and `demo_final_vision.py` reproduce those runs. The vision path is not wired into the
+  `demo_vision_vs_text.py` and `demo_final_vision.py` produced those runs. The vision path is not wired into the
   web app.
 
 ## Design decisions and trade-offs
@@ -327,7 +329,6 @@ evaluation/     metrics and evaluation runners
 data/eval/      benchmark queries and topic labels
 ui/             React website (chat, library, map, home)
 tests/          automated tests
-demo_*.py       runnable experiments behind the benchmark tables
 ```
 
 ## Testing

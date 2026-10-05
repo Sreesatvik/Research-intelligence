@@ -16,7 +16,7 @@ ever see your own library.
 2. [How it works](#how-it-works)
 3. [Architecture](#architecture)
 4. [Evaluation and benchmarks](#evaluation-and-benchmarks)
-5. [Design decisions and trade-offs](#design-decisions-and-trade-offs)
+5. [Why these choices](#why-these-choices)
 6. [Security and privacy](#security-and-privacy)
 7. [API](#api)
 8. [Project layout](#project-layout)
@@ -260,20 +260,86 @@ These need live model calls and were measured during development rather than re-
   `demo_vision_vs_text.py` and `demo_final_vision.py` produced those runs. The vision path is not wired into the
   web app.
 
-## Design decisions and trade-offs
+## Why these choices
 
-- **Dense over TF-IDF**: much better recall (above), at a small latency cost.
-- **Retrieval gate before the model**: it is the cheapest way to avoid both cost and hallucination.
-- **Rules over a learned router**: more accurate here, easy to read and debug, and failures are predictable.
-- **Cache safety over hit rate**: a wrong cached answer is worse than a miss.
-- **Per-user everything**: libraries, indexes, cache keys, chats and jobs are scoped by user id from the start,
-  rather than added later.
-- **Local embeddings**: documents are never sent to a third party for embedding; only the few retrieved passages go
-  to the language model.
-- **Background jobs for Research, streaming for Ask**: a research run can take many seconds and several tool calls,
-  so it runs in the background and the page follows it; a plain answer streams directly.
-- **SQLite**: zero setup and fine for one server. Moving to several API servers means moving chats, documents and
-  accounts to a networked database.
+Each choice below says what was used, why, and what it was chosen over. Where a number backs it up, it comes from
+the [benchmarks](#evaluation-and-benchmarks) above.
+
+### Used in the running app
+
+#### Search
+
+| Choice | Why | Chosen over |
+|---|---|---|
+| **Dense embeddings** (`all-MiniLM-L6-v2`, 384 numbers per passage) | They compare *meaning*, so "cats hunt mice" matches "felines catch rodents". On the benchmark, Recall@3 was 0.977 against 0.682 for keywords. The model is small (runs on a CPU) and local, so your documents are never sent anywhere to be embedded. | **TF-IDF keywords**: ten times faster but misses synonyms. **Larger or hosted embedding models**: slightly better in general, but slower, heavier, or they send your text to a third party. |
+| **Cosine similarity with a plain NumPy dot product** | Vectors are normalised to length 1, so a dot product *is* cosine similarity. It is exact, has no extra service to run, and is fast for a library capped at 30 documents. | **A vector database** (FAISS, pgvector): worth it at millions of passages, needless complexity here. |
+| **~100-word passages, 20-word overlap** | 100 words scored best on both Recall@3 (0.977) and MRR (0.902). Too small loses context; too large blurs the meaning. The overlap stops a fact being cut in half at a boundary. | 30, 50, 200 and 1000-word passages (all measured, all worse). |
+| **Top 3 passages** | Recall@3 is 0.977, Recall@5 is 1.0. Three passages answer almost everything while keeping the prompt small and cheap. | Larger k: more tokens for little gain. |
+
+#### Answering
+
+| Choice | Why | Chosen over |
+|---|---|---|
+| **RAG with numbered citations** | The model is told to answer only from the given passages and cite `[1] [2]`. That makes answers checkable and cuts invention. | **Asking the model directly**: fluent but unverifiable. **Fine-tuning on your documents**: expensive, goes stale at every upload, and cannot show sources. |
+| **Retrieval gate at 0.25** | If the best match is weak, the answer is "I don't know" with no model call. It kept 100% of answerable questions and refused 67% of unanswerable ones for free. | A higher gate would start rejecting real questions (the lowest valid score was 0.31). A lower one saves nothing. |
+| **Follow-up rewrite** | "Do they visit the moon?" is rewritten into a standalone question before searching, for about 100 tokens. Retrieval is what breaks on follow-ups, because it does not understand "they". | **Sending the whole chat to the model**: costs far more tokens and still leaves the search blind. |
+| **Overview path** | "Brief all PDFs" cannot be answered from three matching passages. The model is shown the opening of every document instead. | Normal search (it refused, as the bug showed). |
+| **Streaming over server-sent events** | Words appear immediately. SSE is plain one-way HTTP, so it works through nginx and proxies with no extra protocol. | **WebSockets**: two-way, but more moving parts than a one-way stream needs. |
+| **Groq `gpt-oss-120b` behind a small interface** | Very fast inference and a usable free tier. The app only needs `generate`, `stream` and `chat`, so the model can be swapped without touching the rest. | A single hard-wired provider. |
+
+#### Cost and routing
+
+| Choice | Why | Chosen over |
+|---|---|---|
+| **Keyword rules for routing** | 98% accurate on 45 labelled questions and never sent a hard question to the cheap path. Easy to read and debug. | **A learned classifier**: 73% at this data size. **Always agent**: 4500 tokens per question. **Always plain RAG**: wrong for a third of questions. |
+| **Exact + guarded semantic cache** | Exact matches are always safe. Semantic matches need similarity of 0.96 *and* matching numbers, acronyms and names, because near-misses scored up to 0.94 ("FLARE on StrategyQA" vs "on ASQA"). A wrong cached answer is worse than a miss. | A similarity threshold alone (provably unsafe on the test pairs). |
+| **Daily token quota per user** | One account cannot run up the bill. | No limit. |
+
+#### Research mode
+
+| Choice | Why | Chosen over |
+|---|---|---|
+| **A separate agent mode with typed tools** | Comparing documents needs several searches and reads. Pydantic validates each tool call, a 6-step cap and a loop guard bound the cost, and the user sees every step. | Running the agent automatically on every question (about 5x the tokens). |
+| **Tool output treated as untrusted** | A document can contain text like "ignore your instructions". Results are wrapped as data and the model is told never to obey them (0 of 6 injection attempts worked). | Passing tool text straight to the model. |
+| **Background job with polling** | A run takes many seconds. It runs in the background and the page follows its saved progress, so a refresh does not lose it. | Holding one request open for the whole run. |
+
+#### The map
+
+| Choice | Why | Chosen over |
+|---|---|---|
+| **One point per document** (average of its passage vectors) | Documents, not passages, are what people think about. | One point per passage (hundreds of dots). |
+| **K-means, best of 10 starts, 1 to 7 groups** | Simple and fast. K-means depends on its random start, so the tightest of 10 runs is kept. ARI 0.72 against hand-labelled topics. The group count grows with library size. | A single run (scores ranged 0.51 to 0.73 across seeds). |
+| **PCA to 3 dimensions** | Keeps as much of the spread as possible in a form that can be drawn. | t-SNE or UMAP: nicer pictures, but random and harder to explain. |
+| **Cluster names from distinctive words** (c-TF-IDF) | Each cluster is treated as one document and the words that set it apart are shown. | Asking the model to name clusters (costs tokens). |
+
+#### Accounts, privacy and storage
+
+| Choice | Why | Chosen over |
+|---|---|---|
+| **scrypt password hashes** | Deliberately slow and memory-hungry, so guessing is expensive. | Plain or fast hashes. |
+| **Session in an `httpOnly` cookie** | Page scripts cannot read it, so a cross-site-scripting bug cannot steal it. | `localStorage` tokens (readable by any script on the page). |
+| **Google sign-in via authorization code + PKCE** | The secret stays on the server; state, nonce and PKCE stop forged or replayed logins. | Implicit flow (tokens pass through the browser). |
+| **Everything scoped by user** | Libraries, indexes, cache keys, chats and jobs carry the user id from the start, so no code path can mix users. | Adding isolation later (easy to miss one path). |
+| **Two-layer duplicate detection** | The file hash catches the same file; the text hash catches the same document in another format. | Filenames only (trivially fooled). |
+| **SQLite + files, Redis optional** | No setup for one server. Redis adds shared cache, quotas and jobs when you run several. | A hosted database (more to run, not needed at this scale). |
+
+#### Interface
+
+| Choice | Why | Chosen over |
+|---|---|---|
+| **React + TanStack Query** | Server data (chats, documents, the map) is cached and refreshed for you, so pages stay simple. | Hand-written fetch state. |
+| **One persistent 3D canvas** (Three.js) with GSAP | The world never reloads between pages, which makes transitions feel continuous. | A canvas per page. |
+| **Staged Library with live checks** | Each file is validated in the browser (real PDF header, size, duplicate) before upload, so mistakes are caught early and the user sees why. | A bare file input. |
+
+### Evaluated but not used
+
+| Idea | Result | Why it is not in the app |
+|---|---|---|
+| **TF-IDF retrieval** | Recall@3 0.68 vs 0.98 | Dense won. Only its tokenizer and weighting are reused, to name map clusters. |
+| **Learned router** | 73% vs 98% for rules | Rules won. |
+| **Topic classifier** (softmax from scratch) | 93.9%, same as scikit-learn | Needs a fixed topic list, and your documents have none. |
+| **Vision model for tables and figures** | Worked on cropped tables | Not wired into the web app. |
+| **Trimming old tool results from the agent's history** | About 48% *more* tokens when done blindly | Left off; only the loop guard stayed. |
 
 ## Security and privacy
 

@@ -1,0 +1,114 @@
+/* The page itself is transparent and click-through, so the full-bleed 3D world underneath
+   receives drag and wheel; only the panels capture the pointer. */
+.map {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.map .panel {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.map__legend {
+  top: 22vh;
+  left: var(--pad);
+  width: min(300px, calc(100vw - 2 * var(--pad)));
+  padding: 16px 18px;
+}
+
+.map__heading {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.map__list {
+  display: grid;
+  gap: 2px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.map__cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 8px;
+  color: var(--text);
+  font-size: 0.88rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.map__cluster:hover {
+  background: var(--surface);
+}
+
+.map__cluster--active {
+  background: var(--surface-2);
+}
+
+.map__swatch {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.map__words {
+  flex: 1;
+}
+
+.map__count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.map__info {
+  right: var(--pad);
+  bottom: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: min(420px, calc(100vw - 2 * var(--pad)));
+  padding: 14px 18px;
+}
+
+.map__title {
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.map__meta {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.map__lit {
+  top: 84px;
+  right: var(--pad);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 720px) {
+  .map__legend {
+    top: auto;
+    bottom: calc(var(--pad) + 76px);
+  }
+}

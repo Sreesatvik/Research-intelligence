@@ -1,0 +1,33 @@
+# Research Intelligence: Python dependencies (versions this project was built and tested with)
+# Install into your virtual environment:  python -m pip install -r requirements.txt
+
+# API
+fastapi>=0.141
+uvicorn>=0.35
+pydantic>=2.13
+
+# Retrieval, embeddings, classification, clustering (pulls in PyTorch)
+sentence-transformers>=6.0
+numpy>=2.3
+scikit-learn>=1.7
+
+# Documents (PDF parsing)
+pymupdf>=1.28
+
+# LLM provider calls and configuration
+requests>=2.32
+python-dotenv>=1.1
+
+# Tests
+pytest>=9.0
+httpx>=0.28
+
+# Optional shared state (set REDIS_URL); fakeredis lets the tests run without a server
+redis>=5.0
+fakeredis>=2.20
+
+# Accounts: signed session tokens
+PyJWT>=2.8
+
+# Google sign-in: verifies Google's ID tokens
+google-auth>=2.30

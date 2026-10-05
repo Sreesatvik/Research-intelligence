@@ -1,0 +1,22 @@
+[
+  {"query": "what is byte pair encoding", "relevant": ["tokenization"]},
+  {"query": "why do language models charge by token count", "relevant": ["tokenization"]},
+  {"query": "how are words turned into integers for a model", "relevant": ["tokenization"]},
+  {"query": "what makes two sentences close together in vector space", "relevant": ["embeddings"]},
+  {"query": "why can a query about privacy match text about personal information", "relevant": ["embeddings"]},
+  {"query": "how does a word look at the noun it refers to", "relevant": ["transformers"]},
+  {"query": "what are query key and value vectors", "relevant": ["transformers"]},
+  {"query": "how does the model know the order of the words", "relevant": ["transformers"]},
+  {"query": "how can an assistant answer from private documents without memorizing them", "relevant": ["rag"]},
+  {"query": "what to do when retrieved passages are not enough to answer", "relevant": ["rag"]},
+  {"query": "how do assistants that browse the web keep my information safe", "relevant": ["browser_agent_privacy"]},
+  {"query": "can a web page trick an automated assistant into obeying it", "relevant": ["browser_agent_privacy"]},
+  {"query": "how do networks recognize objects in pictures", "relevant": ["image_classification"]},
+  {"query": "splitting a picture into patches", "relevant": ["image_classification"]},
+  {"query": "grouping documents by theme without labels", "relevant": ["clustering_topics"]},
+  {"query": "how do I name the groups I discovered", "relevant": ["clustering_topics"]},
+  {"query": "how do I know if my search system is any good", "relevant": ["evaluation_metrics"]},
+  {"query": "measuring whether the right result appears near the top", "relevant": ["evaluation_metrics"]},
+  {"query": "how to tell if a generated answer is backed by sources", "relevant": ["evaluation_metrics", "rag"]},
+  {"query": "which models are good at understanding versus generating text", "relevant": ["transformers"]}
+]

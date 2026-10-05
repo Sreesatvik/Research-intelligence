@@ -1,0 +1,234 @@
+/* The sidebar is solid; the area beside it is transparent, so the 3D world shows through. Flat, matte, no glow. */
+.shell {
+  --round: 12px;
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 268px minmax(0, 1fr);
+  pointer-events: none;
+}
+
+.shell__side {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 18px 12px 12px;
+  background: var(--surface);
+  pointer-events: auto;
+}
+
+.shell__brand {
+  padding: 4px 10px 16px;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.shell__nav {
+  display: grid;
+  gap: 2px;
+}
+
+.shell__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  color: var(--text);
+  font-size: 0.92rem;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.shell__item:hover,
+.shell__item--active {
+  background: var(--surface-2);
+}
+
+.shell__icon {
+  width: 18px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.shell__label {
+  margin: 22px 0 6px;
+  padding: 0 10px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.shell__chats {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.shell__chat {
+  position: relative;
+}
+
+.shell__chat-link {
+  display: block;
+  padding: 8px 34px 8px 10px;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.9rem;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 8px;
+}
+
+.shell__chat-link:hover,
+.shell__chat-link--active {
+  background: var(--surface-2);
+}
+
+.shell__chat-delete {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  background: none;
+  border: 0;
+  border-radius: 6px;
+  opacity: 0;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.shell__chat:hover .shell__chat-delete,
+.shell__chat-delete:focus-visible {
+  opacity: 1;
+}
+
+.shell__chat-delete:hover {
+  color: var(--bad);
+}
+
+.shell__empty {
+  padding: 8px 10px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.shell__account {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px 10px;
+  align-items: center;
+  padding: 12px 10px 4px;
+}
+
+.shell__avatar {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.shell__email {
+  overflow: hidden;
+  font-size: 0.85rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shell__signout {
+  justify-self: start;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.shell__signout:hover {
+  color: var(--text);
+}
+
+.shell__main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  pointer-events: none;
+}
+
+.shell__main > * {
+  pointer-events: auto;
+}
+
+.shell__menu,
+.shell__scrim {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shell__side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 3;
+    width: min(300px, 84vw);
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .shell__side--open {
+    transform: none;
+  }
+
+  .shell__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .shell__menu {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1;
+    display: grid;
+    gap: 4px;
+    padding: 10px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .shell__menu span {
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+  }
+}

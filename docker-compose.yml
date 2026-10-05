@@ -1,0 +1,46 @@
+# One command runs the whole stack:  docker compose up --build
+#   web (nginx + built UI)  ->  api (FastAPI)  ->  redis (shared cache, quotas, research jobs)
+# Open http://localhost:8080 once all three are healthy.
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"] # also write to disk, so state survives a restart
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    env_file: .env # GROQ_API_KEY lives here, on your machine only; it is not baked into the image
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_PATH: /app/data/db/app.db # accounts live on a volume, so they survive rebuilds
+    volumes:
+      - hf-cache:/root/.cache/huggingface # the embedding model downloads once, not on every start
+      - app-data:/app/data/db
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 120s # loading the embedding model takes a while
+
+  web:
+    build: ./ui
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  redis-data:
+  hf-cache:
+  app-data:

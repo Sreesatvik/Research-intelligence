@@ -1,0 +1,136 @@
+[
+ {
+  "query": "clustering word vectors instead of using LDA to find topics",
+  "relevant": [
+   "2004.14914v2"
+  ]
+ },
+ {
+  "query": "topic modeling with a TF-IDF variant computed per cluster",
+  "relevant": [
+   "2203.05794v1"
+  ]
+ },
+ {
+  "query": "making image transformers faster by dropping unimportant tokens",
+  "relevant": [
+   "2111.15667v3"
+  ]
+ },
+ {
+  "query": "protecting pictures with encryption so a transformer can still classify them",
+  "relevant": [
+   "2202.00806v1"
+  ]
+ },
+ {
+  "query": "overview of transformers for picture recognition",
+  "relevant": [
+   "2312.01232v2"
+  ]
+ },
+ {
+  "query": "sentence vectors trained using labeled examples",
+  "relevant": [
+   "2106.04791v1"
+  ]
+ },
+ {
+  "query": "learning good sentence vectors with very little training data",
+  "relevant": [
+   "2211.04928v2"
+  ]
+ },
+ {
+  "query": "model decides on its own when to look things up while writing a long answer",
+  "relevant": [
+   "2305.06983v2"
+  ]
+ },
+ {
+  "query": "language models that cite where their knowledge came from",
+  "relevant": [
+   "2403.03187v1"
+  ]
+ },
+ {
+  "query": "shrinking retrieved documents before giving them to the model",
+  "relevant": [
+   "2406.02266v1"
+  ]
+ },
+ {
+  "query": "benchmark for multi-turn conversations that need document lookup",
+  "relevant": [
+   "2409.12558v2"
+  ]
+ },
+ {
+  "query": "getting a safety-trained assistant to misbehave when it controls a web browser",
+  "relevant": [
+   "2410.13886v2"
+  ]
+ },
+ {
+  "query": "running a large language model inside the web browser efficiently",
+  "relevant": [
+   "2412.15803v2"
+  ]
+ },
+ {
+  "query": "attention whose cost grows linearly with sequence length",
+  "relevant": [
+   "2412.17810v1"
+  ]
+ },
+ {
+  "query": "finding which part of the input contains the injected instructions",
+  "relevant": [
+   "2510.12252v2"
+  ]
+ },
+ {
+  "query": "defending against hijacked instructions by marking trusted commands",
+  "relevant": [
+   "2401.07612v1"
+  ]
+ },
+ {
+  "query": "telling whether a website visitor is an AI agent rather than a person",
+  "relevant": [
+   "2606.30119v1",
+   "2607.18659v1"
+  ]
+ },
+ {
+  "query": "retrieval based assistant giving health advice about a supplement",
+  "relevant": [
+   "2604.09548v1"
+  ]
+ },
+ {
+  "query": "poisoning the text descriptions used to guide music generation",
+  "relevant": [
+   "2605.30365v1"
+  ]
+ },
+ {
+  "query": "having models argue with each other to reduce made-up facts",
+  "relevant": [
+   "2505.18581v1"
+  ]
+ },
+ {
+  "query": "using retrieved pictures to answer questions needing visual knowledge",
+  "relevant": [
+   "2502.16636v2"
+  ]
+ },
+ {
+  "query": "finding clear themes in short texts like tweets using clustered embeddings",
+  "relevant": [
+   "2512.06694v2",
+   "2006.09977v1"
+  ]
+ }
+]

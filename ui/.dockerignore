@@ -1,0 +1,6 @@
+# The web image builds from this folder, so it needs its own ignore file (the root one does not apply).
+# Host node_modules holds Windows binaries and would overwrite the clean Linux install made by `npm ci`.
+node_modules
+dist
+.vite
+*.log

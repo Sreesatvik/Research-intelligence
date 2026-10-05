@@ -1,0 +1,11 @@
+# Never bake secrets or local clutter into an image.
+.env
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+data/logs
+data/pdfs
+ui/node_modules
+ui/dist

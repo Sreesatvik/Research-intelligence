@@ -1,0 +1,19 @@
+{
+ "2004.14914v2": "topic_modeling", "2006.09977v1": "topic_modeling", "2203.05794v1": "topic_modeling",
+ "2306.04217v1": "topic_modeling", "2410.00134v1": "topic_modeling", "2512.06694v2": "topic_modeling",
+ "2106.04791v1": "sentence_embeddings", "2204.10298v1": "sentence_embeddings", "2211.04928v2": "sentence_embeddings",
+ "2306.09594v1": "sentence_embeddings", "2309.07396v1": "sentence_embeddings", "2311.04335v1": "sentence_embeddings",
+ "2111.15667v3": "vision_transformers", "2202.00806v1": "vision_transformers", "2203.00960v1": "vision_transformers",
+ "2210.03168v1": "vision_transformers", "2312.01232v2": "vision_transformers", "2505.14719v3": "vision_transformers",
+ "2606.25318v1": "vision_transformers",
+ "2207.13955v1": "efficient_transformers", "2209.12816v2": "efficient_transformers", "2210.07661v4": "efficient_transformers",
+ "2412.17810v1": "efficient_transformers", "2510.19266v4": "efficient_transformers",
+ "2305.06983v2": "rag", "2305.17331v1": "rag", "2403.03187v1": "rag", "2406.02266v1": "rag", "2406.03790v2": "rag",
+ "2409.12558v2": "rag", "2502.16636v2": "rag", "2505.18581v1": "rag", "2506.20051v2": "rag", "2604.09548v1": "rag",
+ "2605.30365v1": "rag",
+ "2306.05499v3": "prompt_injection", "2401.07612v1": "prompt_injection", "2403.04957v1": "prompt_injection",
+ "2510.03705v1": "prompt_injection", "2510.12252v2": "prompt_injection", "2510.13543v1": "prompt_injection",
+ "2608.00747v2": "prompt_injection",
+ "2410.13886v2": "web_agents", "2412.15803v2": "web_agents", "2605.05509v1": "web_agents",
+ "2606.30119v1": "web_agents", "2607.18659v1": "web_agents"
+}

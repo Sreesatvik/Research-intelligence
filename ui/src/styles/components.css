@@ -1,0 +1,217 @@
+/* Shared pieces, all drawn from the same tokens. No shadows, no glow. */
+
+/* Frosted paper: a lightness step plus a blur, not a border or a shadow. */
+.panel {
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+.badge--error {
+  color: var(--bad);
+}
+
+.notice {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--muted);
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+.notice--error {
+  color: var(--bad);
+}
+
+.result__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.link-button {
+  padding: 0;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---- markdown answers ---- */
+.answer {
+  font-size: 1rem;
+}
+
+.answer > :first-child {
+  margin-top: 0;
+}
+
+.answer p {
+  margin: 0 0 12px;
+}
+
+.answer table {
+  width: 100%;
+  margin: 12px 0;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.answer th,
+.answer td {
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--hair);
+}
+
+.answer th {
+  background: var(--surface);
+}
+
+.answer code {
+  padding: 1px 6px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  font-size: 0.88em;
+}
+
+/* ---- agent tool-call timeline ---- */
+.timeline {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+.timeline-item--error {
+  color: var(--bad);
+}
+
+.timeline-item__step {
+  display: grid;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  color: var(--accent);
+  font-size: 0.8rem;
+  background: var(--surface-2);
+  border-radius: 50%;
+}
+
+.timeline-item__args {
+  margin-top: 2px;
+  color: var(--muted);
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85rem;
+  word-break: break-word;
+}
+
+/* ---- site bar (every page except home) ---- */
+.sitebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px var(--pad);
+  pointer-events: none;
+}
+
+.sitebar > * {
+  pointer-events: auto;
+}
+
+.sitebar__brand {
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sitebar__nav {
+  display: flex;
+  gap: 26px;
+}
+
+.sitebar__link {
+  padding: 4px 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease;
+}
+
+.sitebar__link:hover {
+  color: var(--text);
+}
+
+.sitebar__link--active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .sitebar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .sitebar__nav {
+    gap: 18px;
+  }
+}
+
+.sitebar__user {
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.sitebar__button {
+  background: none;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}

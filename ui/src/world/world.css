@@ -1,0 +1,14 @@
+/* The one canvas behind every page. Pages sit on top of it as plain, un-isolated content so that
+   mix-blend-mode text can blend with the 3D layer (a fixed/z-indexed ancestor would block the effect). */
+.world__canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.world__canvas--interactive {
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+}

@@ -1,0 +1,52 @@
+/* Tokens for the whole app. One deep-blue palette; depth comes from lightness steps, not borders. */
+:root {
+  --bg: #13293d;
+  --surface: #16324f;
+  --surface-2: #18435a;
+  --card: #16324f;
+  --hair: rgba(236, 214, 194, 0.14);
+  --text: #ecd6c2;
+  --muted: #a7b4c0;
+  --accent: #5aa6db;
+  --good: #8fc3a5;
+  --bad: #e0907a;
+  --radius: 2px;
+  --pad: clamp(20px, 3vw, 44px);
+
+  font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+code {
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

@@ -1,0 +1,14 @@
+.env
+__pycache__/
+*.pyc
+data/app.db
+data/db/
+
+# Local-only: virtual env, caches, build output, logs, user uploads, the course spec
+.venv/
+.pytest_cache/
+node_modules/
+ui/dist/
+data/logs/
+data/users/
+*.docx
